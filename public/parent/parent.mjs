@@ -8,7 +8,6 @@ function captureSnapshot() {
 
   const sn = snapshot(document, {
     onIframeLoad: (iFrameNode, node) => {
-      console.log("LOADY", iFrameNode, node);
       if (!nodeForIframe) {
         nodeForIframe = node;
       }
@@ -20,7 +19,6 @@ function captureSnapshot() {
       sn.childNodes[1].childNodes[2].childNodes[3].contentDocument =
         nodeForIframe;
       sn.childNodes[1].childNodes[2].childNodes[3].rootId = sn.id;
-      console.log("SN post replace", sn);
       snapshots.push(sn);
     }
   }, 1000);
@@ -57,7 +55,6 @@ document
     const doc = iframe?.contentDocument;
     if (!doc) return;
 
-    console.log("last", last);
     rebuild(last, {
       doc,
       cache: createCache(),
