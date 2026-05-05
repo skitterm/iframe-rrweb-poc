@@ -1,0 +1,18 @@
+{
+  "name": "iframe-rrweb-poc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "POC: same-origin parent + iframe child; parent uses rrweb-snapshot snapshot()/rebuild()",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "keywords": ["rrweb", "iframe", "snapshot"],
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "rrweb-snapshot": "file:./forks/rrweb-snapshot"
+  }
+}

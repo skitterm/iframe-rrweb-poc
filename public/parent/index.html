@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parent</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 1rem;
+        margin: auto;
+        color: #0f172a;
+      }
+      iframe {
+        width: 900px;
+        height: 600px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        margin: 0.75rem 0;
+        position: relative;
+        z-index: 2;
+      }
+      button {
+        padding: 0.45rem 0.85rem;
+        cursor: pointer;
+      }
+      #replay {
+        width: 1000px;
+        max-width: 100%;
+        height: 620px;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        border: 1px dashed #94a3b8;
+        border-radius: 6px;
+        background: #f8fafc;
+        box-sizing: border-box;
+      }
+      #replay iframe#rebuild-frame {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 560px;
+        border: 0;
+        border-radius: 4px;
+        background: #fff;
+      }
+      code {
+        background: #e2e8f0;
+        padding: 0.1rem 0.35rem;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Parent page (same origin as child)</h1>
+    <iframe id="embed" title="child" src="/child/"></iframe>
+    <div class="row">
+      <button type="button" id="btn-download">Download snapshots JSON</button>
+      <button type="button" id="btn-take-snapshot">Take snapshot</button>
+      <button type="button" id="btn-rebuild-snapshot">Rebuild snapshot</button>
+    </div>
+    <p id="replay-hint" class="row" style="margin-top: 0"></p>
+    <h2>Replay</h2>
+    <div id="replay">
+      <iframe
+        id="rebuild-frame"
+        title="Rebuilt snapshot"
+        src="about:blank"
+      ></iframe>
+    </div>
+    <script type="module" src="./parent.mjs"></script>
+  </body>
+</html>
