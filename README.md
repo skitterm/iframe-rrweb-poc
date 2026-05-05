@@ -1,13 +1,12 @@
 # iframe-rrweb-poc
 
-Proof of concept: **parent** and **child** are served by **one Vite dev server** on **http://127.0.0.1:8080/** — parent at **`/parent/`**, child at **`/child/`** (same origin). The parent embeds the child in an iframe. The parent uses [`rrweb-snapshot`](https://www.npmjs.com/package/rrweb-snapshot) **`snapshot()`** / **`rebuild()`** (Take snapshot / Rebuild snapshot). The child only animates its background color.
+This is a proof of concept of using rrweb to snapshot iframe contents. Currently this **_only handles same-origin embedding_**; once that works we can expand this to cross-origin embedding.
 
-With same-origin embedding, **`snapshot(document)`** on the parent can include the iframe’s **document** subtree (not opaque like cross-origin).
+## Details
 
-## Requirements
+**Parent** and **child** are served by **one Vite dev server** on **http://127.0.0.1:8080/** — parent at **`/parent/`**, child at **`/child/`** (same origin). The parent embeds the child in an iframe. The parent uses [`rrweb-snapshot`](https://www.npmjs.com/package/rrweb-snapshot) **`snapshot()`** / **`rebuild()`** (Take snapshot / Rebuild snapshot). The child only animates its background color.
 
-- Node.js 18+
-- npm
+We are using a forked copy of `rrweb-snapshot` -- specifically we have edited the `forks/rrweb-snapshot/es-rrweb-snapshot.js` file to include the `contentDocument` of the iFrame into the DOM snapshot. Currently we are not able to rebuild the DOM with this snapshot, but at least we are farther along the way to capturing the needed contents.
 
 ## Run
 
@@ -15,16 +14,3 @@ With same-origin embedding, **`snapshot(document)`** on the parent can include t
 npm install
 npm run dev
 ```
-
-Open the parent: **http://127.0.0.1:8080/parent/** or **http://localhost:8080/parent/**. The iframe loads **`/child/`** on the same host and port.
-
-Use **Vite** (`npm run dev`); do not open HTML as `file://`.
-
-If you see **`504 (Outdated Optimize Dep)`**, stop the server, run `rm -rf node_modules/.vite`, then `npm run dev` again.
-
-## Stack
-
-- JavaScript (ES modules)
-- Vite 6
-- `rrweb-snapshot` 2.0 alpha
-# iframe-rrweb-poc

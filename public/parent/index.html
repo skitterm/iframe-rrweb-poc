@@ -60,6 +60,15 @@
   <body>
     <h1>Parent page (same origin as child)</h1>
     <iframe id="embed" title="child" src="/child/"></iframe>
+    <h2>Instructions</h2>
+    <ol>
+      <li>Click "Take snapshot" to capture the current state of the iframe</li>
+      <li>
+        Click "Rebuild snapshot" to rehydrate the page according to the
+        snapshotted DOM
+      </li>
+      <li>Click "Download snapshots JSON" to inspect the snapshotted DOM</li>
+    </ol>
     <div class="row">
       <button type="button" id="btn-download">Download snapshots JSON</button>
       <button type="button" id="btn-take-snapshot">Take snapshot</button>
