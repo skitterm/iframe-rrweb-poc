@@ -1822,6 +1822,19 @@ function buildNode(n, options) {
           node_1.appendChild(child);
           continue;
         }
+
+        if (tagName === "iframe") {
+          node_1.onload = () => {
+            // may need open and close stuff here
+            if (node_1.id === "embed") {
+              console.log("contentDocument", node_1.contentDocument);
+              const newThing = document.createElement("span");
+              newThing.textContent = "I am a span";
+              node_1.contentDocument.body.appendChild(newThing);
+            }
+          };
+        }
+
         try {
           if (n.isSVG && name_1 === "xlink:href") {
             node_1.setAttributeNS(
@@ -1947,15 +1960,6 @@ function buildNodeWithSN(n, options) {
   var node = buildNode(n, { doc: doc, hackCss: hackCss, cache: cache });
   if (!node) {
     return null;
-  }
-  if (n.tagName === "iframe" && !alreadyDoneIt) {
-    alreadyDoneIt = true;
-    // so the iframe content isn't getting put in.
-    // This is likely because the rebuild() doesn't know how to handle that stuff.
-    // we may thus need to serialize the iframe content differently, instead of putting it all on
-    // contentDocument. OR if that is correct way of serializiing it, we need to handle that here
-    console.dir(n);
-    return rebuild(n, options);
   }
   if (n.rootId && mirror.getNode(n.rootId) !== doc) {
     mirror.replace(n.rootId, doc);
