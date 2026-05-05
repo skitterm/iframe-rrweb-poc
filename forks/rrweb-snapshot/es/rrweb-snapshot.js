@@ -1826,19 +1826,13 @@ function buildNode(n, options) {
 
         if (tagName === "iframe") {
           node_1.onload = () => {
-            // may need open and close stuff here
             if (node_1.id === "embed") {
-              console.log("n", n);
-              const newThing = buildNodeWithSN(
-                n.contentDocument.childNodes[1].childNodes[2].childNodes[1],
-                {
-                  doc: node_1.contentDocument,
-                  mirror: mirror,
-                },
-              );
-
-              console.log("newThing", newThing);
-              node_1.contentDocument.body.appendChild(newThing);
+              rebuild(n.contentDocument, {
+                doc: node_1.contentDocument,
+                cache: createCache(),
+                mirror: createMirror(),
+                hackCss: true,
+              });
             }
           };
         }
