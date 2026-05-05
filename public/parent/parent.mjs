@@ -1,6 +1,5 @@
 import { snapshot, rebuild, createCache, createMirror } from "rrweb-snapshot";
 
-/** @type {import('rrweb-snapshot').serializedNodeWithId[]} */
 const snapshots = [];
 
 function captureSnapshot() {

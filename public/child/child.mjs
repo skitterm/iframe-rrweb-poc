@@ -27,5 +27,6 @@ function cyclePageBackgroundEverySecond() {
 setTimeout(() => {
   const sn = snapshot(document);
 
+  // not ideal to have * for the origin
   window.parent.postMessage(sn, "*");
 }, 2000);
