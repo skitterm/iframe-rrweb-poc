@@ -5,7 +5,8 @@
   "description": "POC: same-origin parent + iframe child; parent uses rrweb-snapshot snapshot()/rebuild()",
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "concurrently -k -n parent,child -c blue,magenta \"VITE_SERVE=parent vite --mode cross-origin\" \"VITE_SERVE=child vite --mode cross-origin\"",
+    "dev:same-port": "vite --mode same-port"
   },
   "keywords": [
     "rrweb",
@@ -14,6 +15,7 @@
   ],
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "vite": "^6.3.5"
   },
   "dependencies": {
