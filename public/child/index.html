@@ -25,37 +25,6 @@
   </head>
   <body>
     <h1>Child page</h1>
-    <script>
-      const BACKGROUND_CYCLE_COLORS = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "blue",
-        "purple",
-      ];
-
-      function cyclePageBackgroundEverySecond() {
-        let index = 0;
-        const apply = () => {
-          const color =
-            BACKGROUND_CYCLE_COLORS[index % BACKGROUND_CYCLE_COLORS.length];
-          document.documentElement.style.background = color;
-          document.body.style.background = color;
-          index += 1;
-        };
-        apply();
-        setInterval(apply, 5000);
-      }
-
-      // cyclePageBackgroundEverySecond();
-
-      const wasHere = { name: "steven" };
-
-      setTimeout(() => {
-        window.parent.postMessage(wasHere, "*");
-        console.log("wasHere", wasHere);
-      }, 2000);
-    </script>
+    <script type="module" src="./child.mjs"></script>
   </body>
 </html>

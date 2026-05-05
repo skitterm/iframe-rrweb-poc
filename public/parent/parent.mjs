@@ -4,24 +4,9 @@ import { snapshot, rebuild, createCache, createMirror } from "rrweb-snapshot";
 const snapshots = [];
 
 function captureSnapshot() {
-  let nodeForIframe;
+  const sn = snapshot(document, {});
 
-  const sn = snapshot(document, {
-    onIframeLoad: (iFrameNode, node) => {
-      if (!nodeForIframe) {
-        nodeForIframe = node;
-      }
-    },
-  });
-  setTimeout(() => {
-    if (sn) {
-      // find the node and replace it
-      sn.childNodes[1].childNodes[2].childNodes[3].contentDocument =
-        nodeForIframe;
-      sn.childNodes[1].childNodes[2].childNodes[3].rootId = sn.id;
-      snapshots.push(sn);
-    }
-  }, 1000);
+  snapshots.push(sn);
 }
 
 document.getElementById("btn-take-snapshot").addEventListener("click", () => {
@@ -65,5 +50,14 @@ document
 
 window.addEventListener("message", (event) => {
   if (event.origin !== "http://127.0.0.1:8081") return;
-  console.log("message", event);
+
+  const parentSnapshot = snapshots[snapshots.length - 1];
+  const sn = event.data;
+  if (sn && parentSnapshot) {
+    // find the node and replace it
+    parentSnapshot.childNodes[1].childNodes[2].childNodes[3].contentDocument =
+      sn;
+    parentSnapshot.childNodes[1].childNodes[2].childNodes[3].rootId = sn.id;
+    console.log("parentSnapshot", parentSnapshot);
+  }
 });
