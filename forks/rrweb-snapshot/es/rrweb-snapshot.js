@@ -1770,7 +1770,8 @@ function createCache() {
 function buildNode(n, options) {
   var doc = options.doc,
     hackCss = options.hackCss,
-    cache = options.cache;
+    cache = options.cache,
+    mirror = options.mirror;
   switch (n.type) {
     case NodeType.Document:
       return doc.implementation.createDocument(null, "", null);
@@ -1827,9 +1828,16 @@ function buildNode(n, options) {
           node_1.onload = () => {
             // may need open and close stuff here
             if (node_1.id === "embed") {
-              console.log("contentDocument", node_1.contentDocument);
-              const newThing = document.createElement("span");
-              newThing.textContent = "I am a span";
+              console.log("n", n);
+              const newThing = buildNodeWithSN(
+                n.contentDocument.childNodes[1].childNodes[2].childNodes[1],
+                {
+                  doc: node_1.contentDocument,
+                  mirror: mirror,
+                },
+              );
+
+              console.log("newThing", newThing);
               node_1.contentDocument.body.appendChild(newThing);
             }
           };
@@ -1957,7 +1965,12 @@ function buildNodeWithSN(n, options) {
     hackCss = _b === void 0 ? true : _b,
     afterAppend = options.afterAppend,
     cache = options.cache;
-  var node = buildNode(n, { doc: doc, hackCss: hackCss, cache: cache });
+  var node = buildNode(n, {
+    doc: doc,
+    hackCss: hackCss,
+    cache: cache,
+    mirror: mirror,
+  });
   if (!node) {
     return null;
   }
