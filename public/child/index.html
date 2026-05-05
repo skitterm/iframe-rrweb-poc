@@ -48,7 +48,14 @@
         setInterval(apply, 5000);
       }
 
-      cyclePageBackgroundEverySecond();
+      // cyclePageBackgroundEverySecond();
+
+      const wasHere = { name: "steven" };
+
+      setTimeout(() => {
+        window.parent.postMessage(wasHere, "*");
+        console.log("wasHere", wasHere);
+      }, 2000);
     </script>
   </body>
 </html>

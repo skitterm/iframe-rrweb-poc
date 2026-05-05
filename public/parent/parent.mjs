@@ -62,3 +62,8 @@ document
       hackCss: true,
     });
   });
+
+window.addEventListener("message", (event) => {
+  if (event.origin !== "http://127.0.0.1:8081") return;
+  console.log("message", event);
+});
