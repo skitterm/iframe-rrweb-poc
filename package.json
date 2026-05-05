@@ -7,12 +7,16 @@
   "scripts": {
     "dev": "vite"
   },
-  "keywords": ["rrweb", "iframe", "snapshot"],
+  "keywords": [
+    "rrweb",
+    "iframe",
+    "snapshot"
+  ],
   "license": "ISC",
   "devDependencies": {
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "rrweb-snapshot": "file:./forks/rrweb-snapshot"
+    "rrweb-snapshot": "^2.0.0-alpha.4"
   }
 }
