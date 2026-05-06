@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -106,7 +106,9 @@ test("has title", async ({ page }) => {
   await injectForkRrwebSnapshot(page);
 
   const result = await page.evaluate(evaluateSnapshottingCode);
-  console.log(result);
+  const outPath = path.join(repoRoot, "test-results", "snapshot-result.json");
+  mkdirSync(path.dirname(outPath), { recursive: true });
+  writeFileSync(outPath, JSON.stringify(result, null, 2), "utf8");
 
   await expect(page).toHaveTitle(/Parent/);
 });
