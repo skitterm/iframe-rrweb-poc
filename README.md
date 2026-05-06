@@ -22,5 +22,6 @@ We are using a forked copy of `rrweb-snapshot` -- specifically we have edited th
 
 ## To test still
 
+1. **_Can we inject the rrweb code into the child iframe?_** (crucial)
 1. Snapshot of dynamic iframe (e.g. whose contents have changed since initial load)
 1. Nested iframes
