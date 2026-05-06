@@ -37,7 +37,9 @@ const evaluateSnapshottingCode = () => {
       const sn = globalThis.rrweb.snapshot(document, {});
       console.dir(sn);
       snapshots.push(sn);
-      resolve(snapshots[snapshots.length - 1]);
+      setTimeout(() => {
+        resolve(snapshots[snapshots.length - 1]);
+      }, 2000);
     }
 
     document
@@ -81,6 +83,8 @@ const evaluateSnapshottingCode = () => {
         });
       });
 
+    document.getElementById("btn-take-snapshot").click();
+
     window.addEventListener("message", (event) => {
       if (event.origin !== "http://127.0.0.1:8081") return;
 
@@ -94,8 +98,6 @@ const evaluateSnapshottingCode = () => {
         console.log("parentSnapshot", parentSnapshot);
       }
     });
-
-    document.getElementById("btn-take-snapshot").click();
   });
 };
 
