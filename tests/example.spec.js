@@ -37,7 +37,7 @@ const evaluateSnapshottingCode = () => {
       const sn = globalThis.rrweb.snapshot(document, {});
       console.dir(sn);
       snapshots.push(sn);
-      resolve(snapshots);
+      resolve(snapshots[snapshots.length - 1]);
     }
 
     document
@@ -105,8 +105,6 @@ test("has title", async ({ page }) => {
 
   const result = await page.evaluate(evaluateSnapshottingCode);
   console.log(result);
-
-  // await page.locator("#btn-take-snapshot").click();
 
   await expect(page).toHaveTitle(/Parent/);
 });
