@@ -17,6 +17,13 @@ const rrwebSnapshotEsPath = path.join(
   "rrweb-snapshot.js",
 );
 
+/** Parent dev server origin (matches `vite.config.mjs` + test `goto`). */
+const parentOrigin = "http://localhost:8080";
+
+/** Synthetic path fulfilled by Playwright routing (same origin as parent). */
+const rebuildReplayPath = "/__playwright__/rebuild-replay.html";
+const rebuildReplayUrl = `${parentOrigin}${rebuildReplayPath}`;
+
 /** Expose fork on `globalThis.rrweb` / `window.rrweb` for `page.evaluate`. */
 async function injectForkRrwebSnapshot(page) {
   const libSource = readFileSync(rrwebSnapshotEsPath, "utf8");
@@ -35,55 +42,13 @@ const evaluateSnapshottingCode = () => {
 
     function captureSnapshot() {
       const sn = globalThis.rrweb.snapshot(document, {});
-      console.dir(sn);
       snapshots.push(sn);
       setTimeout(() => {
         resolve(snapshots[snapshots.length - 1]);
       }, 2000);
     }
 
-    document
-      .getElementById("btn-take-snapshot")
-      .addEventListener("click", () => {
-        document.getElementById("replay-hint").textContent = "";
-        captureSnapshot();
-      });
-
-    document.getElementById("btn-download").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(snapshots, null, 2)], {
-        type: "application/json",
-      });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `rrweb-snapshots-${Date.now()}.json`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    document
-      .getElementById("btn-rebuild-snapshot")
-      .addEventListener("click", () => {
-        const last = snapshots[snapshots.length - 1];
-        if (!last) {
-          document.getElementById("replay-hint").textContent =
-            "Take at least one snapshot first.";
-          return;
-        }
-        document.getElementById("replay-hint").textContent = "";
-
-        const iframe = document.getElementById("rebuild-frame");
-        const doc = iframe?.contentDocument;
-        if (!doc) return;
-
-        rebuild(last, {
-          doc,
-          cache: createCache(),
-          mirror: createMirror(),
-          hackCss: true,
-        });
-      });
-
-    document.getElementById("btn-take-snapshot").click();
+    captureSnapshot();
 
     window.addEventListener("message", (event) => {
       if (event.origin !== "http://127.0.0.1:8081") return;
@@ -95,14 +60,13 @@ const evaluateSnapshottingCode = () => {
         parentSnapshot.childNodes[1].childNodes[2].childNodes[3].contentDocument =
           sn;
         parentSnapshot.childNodes[1].childNodes[2].childNodes[3].rootId = sn.id;
-        console.log("parentSnapshot", parentSnapshot);
       }
     });
   });
 };
 
 test("has title", async ({ page }) => {
-  await page.goto("http://localhost:8080/parent/");
+  await page.goto(`${parentOrigin}/parent/`);
   await injectForkRrwebSnapshot(page);
 
   const result = await page.evaluate(evaluateSnapshottingCode);
@@ -111,4 +75,34 @@ test("has title", async ({ page }) => {
   writeFileSync(outPath, JSON.stringify(result, null, 2), "utf8");
 
   await expect(page).toHaveTitle(/Parent/);
+
+  const context = page.context();
+  await context.route(rebuildReplayUrl, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "text/html; charset=utf-8",
+      body: `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Rebuild replay</title></head><body><h1>Rebuild replay</h1><div id="replay-root"></div></body></html>`,
+    });
+  });
+
+  const rebuildPage = await context.newPage();
+  await rebuildPage.goto(rebuildReplayUrl);
+  await injectForkRrwebSnapshot(rebuildPage);
+  await rebuildPage.waitForFunction(() => globalThis.rrweb?.rebuild);
+
+  await rebuildPage.evaluate((result) => {
+    return new Promise((resolve) => {
+      const { rebuild, createCache, createMirror } = globalThis.rrweb;
+      console.log("result page", result);
+      rebuild(result, {
+        doc: document,
+        cache: createCache(),
+        mirror: createMirror(),
+        hackCss: true,
+      });
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  }, result);
 });
