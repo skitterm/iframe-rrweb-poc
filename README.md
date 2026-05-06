@@ -11,7 +11,7 @@ We are using a forked copy of `rrweb-snapshot` -- specifically we have edited th
 ## How to see the POC
 
 1. `npm install`
-1. `npm run dev`
+1. `npm run dev:cross-origin` or `npm run dev:same-origin` (for cross-origin or same-origin iframe)
 1. `npx playwright test --ui`
 1. Play the test (in Playwright Test's UI)
 1. Observe that there are 2 pages in the test
@@ -24,6 +24,7 @@ We are using a forked copy of `rrweb-snapshot` -- specifically we have edited th
 
 1. **_Can we inject the rrweb code into the child iframe?_** (crucial)
 1. Snapshot of dynamic iframe (e.g. whose contents have changed since initial load)
+1. Can we (and do we need to) capture network requests for the embedded page (via CDP)?
 1. Will this work with CORS restrictions?
 1. Can postMessage origin be restricted for security?
 1. Nested iframes

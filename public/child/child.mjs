@@ -19,10 +19,10 @@ function cyclePageBackgroundEverySecond() {
     index += 1;
   };
   apply();
-  setInterval(apply, 5000);
+  setInterval(apply, 500);
 }
 
-// cyclePageBackgroundEverySecond();
+cyclePageBackgroundEverySecond();
 
 setTimeout(() => {
   const sn = snapshot(document);
